@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Therapist Questionnaire</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+      max-width: 700px;
+      width: 95%;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .question label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    .btn {
+      margin-top: 15px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: block;
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 15px;
+      border-left: 5px solid #2193b0;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #2193b0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 Therapist Questionnaire</h1>
+    <p>Please answer a few questions so we can suggest the right therapist for you.</p>
+
+    <form id="questionnaire">
+      <div class="question">
+        <label for="category">Who is seeking therapy?</label>
+        <select id="category" required>
+          <option value="">-- Select an option --</option>
+          <option value="teen">Teen</option>
+          <option value="couple">Couple</option>
+          <option value="individual">Individual</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="focus">What is your main area of concern?</label>
+        <select id="focus" required>
+          <option value="">-- Select an option --</option>
+          <option value="anxiety">Anxiety / Stress</option>
+          <option value="relationships">Relationships / Family</option>
+          <option value="self-esteem">Self-Esteem / Identity</option>
+          <option value="depression">Depression / Low Mood</option>
+          <option value="career">Career / Academic Stress</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="preference">Do you prefer therapy online or in-person?</label>
+        <select id="preference" required>
+          <option value="">-- Select an option --</option>
+          <option value="online">Online</option>
+          <option value="in-person">In-Person</option>
+          <option value="no-preference">No Preference</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="note">Anything else you'd like us to know?</label>
+        <textarea id="note" placeholder="Optional..."></textarea>
+      </div>
+
+      <button type="button" class="btn" onclick="matchTherapist()">Find My Therapist</button>
+    </form>
+
+    <div id="result" class="result" style="display:none;"></div>
+
+    <a href="support.html" class="back">⬅ Back to Support</a>
+  </div>
+
+  <script>
+    function matchTherapist() {
+      const category = document.getElementById("category").value;
+      const focus = document.getElementById("focus").value;
+      const preference = document.getElementById("preference").value;
+
+      let match = "a General Therapist";
+
+      if (category === "teen") {
+        match = "a Teen Counselor specializing in " + focus;
+      } else if (category === "couple") {
+        match = "a Couples Therapist experienced in " + focus;
+      } else if (category === "individual") {
+        match = "an Individual Therapist focused on " + focus;
+      }
+
+      if (preference === "online") {
+        match += " (Available Online)";
+      } else if (preference === "in-person") {
+        match += " (In-Person Sessions)";
+      }
+
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerText = "✅ Based on your answers, we recommend " + match + ".";
+    }
+  </script>
+</body>
+</html>

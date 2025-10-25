@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Journal</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      padding: 12px;
+      font-size: 1rem;
+      outline: none;
+      resize: none;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    textarea {
+      height: 120px;
+    }
+
+    .btn {
+      margin-top: 10px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #6dd5ed, #2193b0);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
+    }
+
+    .entries {
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .entry {
+      background: #f8f9fa;
+      border-left: 5px solid #2193b0;
+      padding: 10px 15px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      color: #444;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #2193b0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📓 Your Journal</h1>
+    <p>Write down your thoughts and feelings. Your entries are private to you.</p>
+
+    <!-- Title input -->
+    <input type="text" id="title" placeholder="Entry title..." />
+
+    <!-- Content input -->
+    <textarea id="content" placeholder="Start writing your journal entry..."></textarea><br>
+
+    <button class="btn" onclick="addEntry()">Save Entry</button>
+
+    <div class="entries" id="entries">
+      <h2>Previous Entries</h2>
+    </div>
+
+    <a href="index.html" class="back">⬅ Back to Home</a>
+  </div>
+
+  <script>
+  const API_URL = "http://127.0.0.1:8000/journal/";
+
+  // Add a new entry
+  async function addEntry() {
+    const title = document.getElementById("title").value.trim();
+    const content = document.getElementById("content").value.trim();
+
+    if (!title || !content) {
+        alert("Please fill in both title and content!");
+        return;
+    }
+
+    let res = await fetch(API_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({title, content})
+    });
+    let data = await res.json();
+    alert(data.message);
+
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+
+    loadEntries();
+  }
+
+  // Load all entries
+  async function loadEntries() {
+    let res = await fetch(API_URL);
+    let data = await res.json();
+    const list = document.getElementById("entries");
+    list.innerHTML = "<h2>Previous Entries</h2>";
+
+    for (let id in data) {
+      const entry = data[id];
+      list.innerHTML += `
+        <div class="entry">
+          <h3>${entry.title}</h3>
+          <p>${entry.content}</p>
+          <button onclick="deleteEntry(${id})">Delete</button>
+          <button onclick="updateEntry(${id}, '${entry.title}', '${entry.content}')">Update</button>
+        </div>
+      `;
+    }
+  }
+
+  // Delete an entry
+  async function deleteEntry(id) {
+    let res = await fetch(API_URL + id, { method: "DELETE" });
+    let data = await res.json();
+    alert(data.message);
+    loadEntries();
+  }
+
+  // Update an entry
+  async function updateEntry(id, oldTitle, oldContent) {
+    const newTitle = prompt("Edit title:", oldTitle);
+    if (newTitle === null) return;
+
+    const newContent = prompt("Edit content:", oldContent);
+    if (newContent === null) return;
+
+    let res = await fetch(API_URL + id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: newTitle, content: newContent })
+    });
+    let data = await res.json();
+    alert(data.message);
+    loadEntries();
+  }
+
+  window.onload = loadEntries;
+  </script>
+</body>
+</html>
