@@ -6,13 +6,13 @@
 
 ## ✨ Features
 
-- **AI Chatbot** 🤖  
+- 🤖 **AI Chatbot**   
   Engage in meaningful conversations with an AI-powered chatbot for mental support and guidance.
 
-- **Personal Journal** 📓  
+- 📓 **Personal Journal**  
   Create, read, update, and delete private journal entries to reflect on thoughts and emotions.
 
-- **Therapist Matching** 🧑‍⚕️  
+- 🧑‍⚕️ **Therapist Matching**   
   A simple questionnaire-based system to suggest suitable therapists (online or in-person) based on user preferences and needs.
 
 ---
